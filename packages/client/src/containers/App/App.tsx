@@ -5,6 +5,7 @@ import {NativeRouter, Routes, Route} from 'react-router-native';
 
 import {client as apolloClient} from '../../graphql/client';
 import {LoginRoute} from '../../routes/LoginRoute';
+import {HomeRoute} from '../../routes/HomeRoute';
 
 export const App = () => {
     const isDarkMode = useColorScheme() === 'dark';
@@ -14,7 +15,8 @@ export const App = () => {
         <ApolloProvider client={apolloClient}>
             <NativeRouter>
                 <Routes>
-                    <Route index element={<LoginRoute />} />
+                    <Route element={<LoginRoute />} index />
+                    <Route path="/home" element={<HomeRoute />} />
                 </Routes>
             </NativeRouter>
         </ApolloProvider>
