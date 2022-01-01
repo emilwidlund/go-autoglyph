@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {View, TextInput} from 'react-native';
+
 import {SolidButton} from '../../components/Button/SolidButton';
 
 export const LoginContainer = () => {

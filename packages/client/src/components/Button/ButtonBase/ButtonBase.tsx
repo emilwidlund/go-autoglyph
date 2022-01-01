@@ -1,7 +1,16 @@
 import * as React from 'react';
-import {GestureResponderEvent, StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle} from 'react-native';
+import {
+    ActivityIndicator,
+    GestureResponderEvent,
+    StyleSheet,
+    Text,
+    TextStyle,
+    TouchableOpacity,
+    ViewStyle
+} from 'react-native';
+import {useTheme} from '../../../hooks/useTheme';
 
-import {baseStyles} from './ButtonBase.styles';
+import {createBaseStyles} from './ButtonBase.styles';
 
 export type ButtonBasePressHandler = (event: GestureResponderEvent) => void;
 
@@ -12,14 +21,32 @@ export type ButtonBaseStyles = StyleSheet.NamedStyles<{
 
 export interface IButtonBaseProps {
     labelText: string;
+    disabled?: boolean;
+    loading?: boolean;
     styles?: ButtonBaseStyles;
     onPress?: ButtonBasePressHandler;
 }
 
-export const ButtonBase = ({labelText, styles, onPress}: IButtonBaseProps) => {
+export const ButtonBase = ({labelText, disabled, loading, styles, onPress}: IButtonBaseProps) => {
+    const theme = useTheme();
+    const baseStyles = React.useMemo(() => createBaseStyles(theme), [theme]);
+    const isDisabled = React.useMemo(() => disabled || loading, [disabled, loading]);
+
     return (
-        <TouchableOpacity style={[baseStyles.container, styles?.container]} onPress={onPress}>
-            <Text style={[baseStyles.text, styles?.text]}>{labelText}</Text>
+        <TouchableOpacity
+            style={StyleSheet.flatten([
+                baseStyles.container,
+                isDisabled && baseStyles.disabledContainer,
+                styles?.container
+            ])}
+            activeOpacity={0.6}
+            onPress={onPress}
+            disabled={isDisabled}>
+            {loading ? (
+                <ActivityIndicator size="small" color={theme.colors.text.light} />
+            ) : (
+                <Text style={StyleSheet.flatten([baseStyles.text, styles?.text])}>{labelText}</Text>
+            )}
         </TouchableOpacity>
     );
 };

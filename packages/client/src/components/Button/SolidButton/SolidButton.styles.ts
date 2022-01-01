@@ -1,11 +1,14 @@
 import {StyleSheet} from 'react-native';
 
-export const baseStyles = StyleSheet.create({
-    container: {
-        borderRadius: 14,
-        backgroundColor: '#2222ff'
-    },
-    text: {
-        color: '#fff'
-    }
-});
+import {IThemeSpec} from '../../../utils/theme';
+
+export const createBaseStyles = ({colors, dimensions}: IThemeSpec) =>
+    StyleSheet.create({
+        container: {
+            borderRadius: dimensions.borderRadius.xlarge,
+            backgroundColor: colors.brand.primary
+        },
+        text: {
+            color: colors.text.light
+        }
+    });
