@@ -1,0 +1,42 @@
+# docker-compose.yml
+version: '3'
+services:
+    esmerelda-server:
+        build: .
+        depends_on:
+            - postgres
+            - redis
+        restart: always
+        environment:
+            POSTGRES_URL: postgres://esmerelda:server@postgres:5432/esmerelda
+            REDIS_URL: redis://redis:6379
+            NODE_ENV: development
+            PORT: 3001
+            JWT_AUTH_SECRET: collectionsfromthewhiteout
+            JWT_REFRESH_SECRET: noondaydream
+        ports:
+            - '3001:3001'
+        command: npm start
+        volumes:
+            - .:/usr/src/esmerelda-server
+            - /usr/src/esmerelda-server/node_modules
+
+    postgres:
+        image: postgres:13.2
+        ports:
+            - '5432:5432'
+        volumes:
+            - ./data/postgres:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: esmerelda
+            POSTGRES_PASSWORD: server
+            POSTGRES_DB: esmerelda
+
+    redis:
+        image: redis:alpine
+        command: redis-server --appendonly yes
+        ports:
+            - 6379:6379
+        volumes:
+            - ./data/redis:/data/redis
+        restart: always

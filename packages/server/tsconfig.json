@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "lib": ["ES2017"],
+        "target": "ES6",
+        "outDir": "build",
+        "strict": true,
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false
+    },
+    "include": ["./src"]
+}
