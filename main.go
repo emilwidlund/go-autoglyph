@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/hex"
 	"flag"
-	"fmt"
 	"log"
 	"math"
 	"math/rand"
@@ -22,7 +21,6 @@ func main() {
 }
 
 func writePatternToFile(pattern string, path string) {
-    fmt.Printf("%s", path)
     handle, err := os.Create(path)
 
     if err != nil {
