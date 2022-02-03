@@ -1,4 +1,4 @@
-# Esmerelda
+# go-autoglyph
 
 A Go-implementation of the [Autoglyph](https://larvalabs.com/autoglyphs) algorithm.
 
