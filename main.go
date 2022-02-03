@@ -72,13 +72,8 @@ func getBytesFromHex(value string) []byte {
 
 func generate(id int64) string {
 	idToSymbolScheme := make(map[int64]uint8)
-	idToSeed := make(map[int64]int64)
-	seedToId := make(map[int64]int64)
 
 	rand.Seed(id)
-
-	idToSeed[id] = rand.Int63()
-	seedToId[rand.Int63()] = id
 
 	a := rand.Uint64()
 	idToSymbolScheme[id] = getScheme(a)
