@@ -37,32 +37,28 @@ func writePatternToFile(pattern string, path string) {
 }
 
 func getScheme(a uint64) uint8 {
-	index := a % 83
-	var scheme uint8
-
-	if index < 20 {
-		scheme = 1
-	} else if index < 35 {
-		scheme = 2
-	} else if index < 48 {
-		scheme = 3
-	} else if index < 59 {
-		scheme = 4
-	} else if index < 68 {
-		scheme = 5
-	} else if index < 73 {
-		scheme = 6
-	} else if index < 77 {
-		scheme = 7
-	} else if index < 80 {
-		scheme = 8
-	} else if index < 82 {
-		scheme = 9
-	} else {
-		scheme = 10
+	switch index := a % 83; {
+	case index < 20:
+		return 1
+	case index < 35:
+		return 2
+	case index < 48:
+		return 3
+	case index < 59:
+		return 4
+	case index < 68:
+		return 5
+	case index < 73:
+		return 6
+	case index < 77:
+		return 7
+	case index < 80:
+		return 8
+	case index < 82:
+		return 9
+	default:
+		return 10
 	}
-
-	return scheme
 }
 
 func getBytesFromHex(value string) []byte {

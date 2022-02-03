@@ -4,4 +4,4 @@
 
 ## Usage
 
-`go run src/main.go --out my-pattern.txt --seed 500`
+`go run main.go --out my-pattern.txt --seed 500`
