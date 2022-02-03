@@ -19,50 +19,25 @@ func main() {
 	writePatternToFile(result, *out)
 }
 
-func getScheme(a int64) uint8 {
+func getSymbols(a int64) []byte {
 	switch index := a % 83; {
 	case index < 20:
-		return 1
-	case index < 35:
-		return 2
-	case index < 48:
-		return 3
-	case index < 59:
-		return 4
-	case index < 68:
-		return 5
-	case index < 73:
-		return 6
-	case index < 77:
-		return 7
-	case index < 80:
-		return 8
-	case index < 82:
-		return 9
-	default:
-		return 10
-	}
-}
-
-func getSymbols(scheme uint8) []byte {
-	switch {
-	case scheme == 1:
 		return getBytesFromHex("2E582F5C2E")
-	case scheme == 2:
+	case index < 35:
 		return getBytesFromHex("2E2B2D7C2E")
-	case scheme == 3:
+	case index < 48:
 		return getBytesFromHex("2E2F5C2E2E")
-	case scheme == 4:
+	case index < 59:
 		return getBytesFromHex("2E5C7C2D2F")
-	case scheme == 5:
+	case index < 68:
 		return getBytesFromHex("2E4F7C2D2E")
-	case scheme == 6:
+	case index < 73:
 		return getBytesFromHex("2E5C5C2E2E")
-	case scheme == 7:
+	case index < 77:
 		return getBytesFromHex("2E237C2D2B")
-	case scheme == 8:
+	case index < 80:
 		return getBytesFromHex("2E4F4F2E2E")
-	case scheme == 9:
+	case index < 82:
 		return getBytesFromHex("2E232E2E2E")
 	default:
 		return getBytesFromHex("2E234F2E2E")
@@ -83,7 +58,7 @@ func Generate(seed int64) string {
 
 	x, y, v, value := 0, 0, uint(0), uint(0)
 	mod := uint((seed % 11) + 5)
-	symbols := getSymbols(getScheme(seed))
+	symbols := getSymbols(seed)
 
 	var c uint
 
