@@ -1,6 +1,6 @@
 # Esmerelda
 
-[Autoglyph](https://larvalabs.com/autoglyphs) generator implemented in Go.
+A Go-implementation of the [Autoglyph](https://larvalabs.com/autoglyphs) algorithm.
 
 ## Usage
 
