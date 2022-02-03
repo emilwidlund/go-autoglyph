@@ -5,6 +5,7 @@ import (
 	"flag"
 	"log"
 	"math"
+	"math/rand"
 	"os"
 	"time"
 )
@@ -17,9 +18,11 @@ func main() {
 
 	result := Generate(*seed)
 	writePatternToFile(result, *out)
+
+	log.Printf("Generated Autoglyph with seed %d to output path: %s", *seed, *out)
 }
 
-func getSymbols(a int64) []byte {
+func getSymbols(a int) []byte {
 	switch index := a % 83; {
 	case index < 20:
 		return getBytesFromHex("2E582F5C2E")
@@ -50,6 +53,8 @@ func getBytesFromHex(value string) []byte {
 }
 
 func Generate(seed int64) string {
+	rand.Seed(seed)
+	a := rand.Int()
 	const ONE = int(0x100000000)
 	const SIZE = 64
 	const HALF_SIZE = SIZE / 2
@@ -57,26 +62,26 @@ func Generate(seed int64) string {
 	var output [SIZE * (SIZE + 1)]byte
 
 	x, y, v, value := 0, 0, uint(0), uint(0)
-	mod := uint((seed % 11) + 5)
-	symbols := getSymbols(seed)
+	mod := uint((a % 11) + 5)
+	symbols := getSymbols(a)
 
 	var c uint
 
 	for i := 0; i < SIZE; i++ {
 		y = (2*(i-HALF_SIZE) + 1)
-		if seed%3 == 1 {
+		if a%3 == 1 {
 			y = -y
-		} else if seed%3 == 2 {
+		} else if a%3 == 2 {
 			y = int(math.Abs(float64(y)))
 		}
-		y = y * int(seed)
+		y = y * int(a)
 
 		for j := 0; j < SIZE; j++ {
 			x = (2*(j-HALF_SIZE) + 1)
-			if seed%2 == 1 {
+			if a%2 == 1 {
 				x = int(math.Abs(float64(x)))
 			}
-			x = x * int(seed)
+			x = x * int(a)
 			v = uint(x*y/ONE) % mod
 
 			if v < 5 {
