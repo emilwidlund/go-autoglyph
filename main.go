@@ -12,11 +12,12 @@ import (
 )
 
 func main() {
+    seed := flag.Int64("seed", time.Now().Unix(), "Pattern seed")
+    out := flag.String("out", "pattern.txt", "Output path for the pattern")
+
     flag.Parse()
 
-    result := generate(time.Now().Unix())
-
-    out := flag.String("out", "pattern.txt", "Output path for the pattern")
+    result := generate(*seed)
     writePatternToFile(result, *out)
 }
 
@@ -76,7 +77,7 @@ func generate(id int64) string {
 	idToSeed := make(map[int64]int64)
 	seedToId := make(map[int64]int64)
 
-	rand.Seed(time.Now().Unix())
+	rand.Seed(id)
 
 	idToSeed[id] = rand.Int63()
 	seedToId[rand.Int63()] = id
