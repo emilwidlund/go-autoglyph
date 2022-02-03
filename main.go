@@ -5,7 +5,6 @@ import (
 	"flag"
 	"log"
 	"math"
-	"math/rand"
 	"os"
 	"time"
 )
@@ -20,23 +19,7 @@ func main() {
 	writePatternToFile(result, *out)
 }
 
-func writePatternToFile(pattern string, path string) {
-	handle, err := os.Create(path)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer handle.Close()
-
-	_, err = handle.WriteString(pattern)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func getScheme(a uint64) uint8 {
+func getScheme(a int64) uint8 {
 	switch index := a % 83; {
 	case index < 20:
 		return 1
@@ -91,11 +74,7 @@ func getBytesFromHex(value string) []byte {
 	return val
 }
 
-func Generate(id int64) string {
-	rand.Seed(id)
-
-	a := rand.Uint64()
-
+func Generate(seed int64) string {
 	const ONE = int(0x100000000)
 	const SIZE = 64
 	const HALF_SIZE = SIZE / 2
@@ -103,26 +82,26 @@ func Generate(id int64) string {
 	var output [SIZE * (SIZE + 1)]byte
 
 	x, y, v, value := 0, 0, uint(0), uint(0)
-	mod := uint((a % 11) + 5)
-	symbols := getSymbols(getScheme(a))
+	mod := uint((seed % 11) + 5)
+	symbols := getSymbols(getScheme(seed))
 
 	var c uint
 
 	for i := 0; i < SIZE; i++ {
 		y = (2*(i-HALF_SIZE) + 1)
-		if a%3 == 1 {
+		if seed%3 == 1 {
 			y = -y
-		} else if a%3 == 2 {
+		} else if seed%3 == 2 {
 			y = int(math.Abs(float64(y)))
 		}
-		y = y * int(a)
+		y = y * int(seed)
 
 		for j := 0; j < SIZE; j++ {
 			x = (2*(j-HALF_SIZE) + 1)
-			if a%2 == 1 {
+			if seed%2 == 1 {
 				x = int(math.Abs(float64(x)))
 			}
-			x = x * int(a)
+			x = x * int(seed)
 			v = uint(x*y/ONE) % mod
 
 			if v < 5 {
@@ -139,4 +118,20 @@ func Generate(id int64) string {
 	}
 
 	return string(output[:])
+}
+
+func writePatternToFile(pattern string, path string) {
+	handle, err := os.Create(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer handle.Close()
+
+	_, err = handle.WriteString(pattern)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
