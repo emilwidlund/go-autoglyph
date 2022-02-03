@@ -74,14 +74,14 @@ func Generate(seed int64) string {
 		} else if a%3 == 2 {
 			y = int(math.Abs(float64(y)))
 		}
-		y = y * int(a)
+		y = y * a
 
 		for j := 0; j < SIZE; j++ {
 			x = (2*(j-HALF_SIZE) + 1)
 			if a%2 == 1 {
 				x = int(math.Abs(float64(x)))
 			}
-			x = x * int(a)
+			x = x * a
 			v = uint(x*y/ONE) % mod
 
 			if v < 5 {
