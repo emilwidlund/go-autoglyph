@@ -16,7 +16,7 @@ func main() {
 
 	flag.Parse()
 
-	result := generate(*seed)
+	result := Generate(*seed)
 	writePatternToFile(result, *out)
 }
 
@@ -61,18 +61,40 @@ func getScheme(a uint64) uint8 {
 	}
 }
 
+func getSymbols(scheme uint8) []byte {
+	switch {
+	case scheme == 1:
+		return getBytesFromHex("2E582F5C2E")
+	case scheme == 2:
+		return getBytesFromHex("2E2B2D7C2E")
+	case scheme == 3:
+		return getBytesFromHex("2E2F5C2E2E")
+	case scheme == 4:
+		return getBytesFromHex("2E5C7C2D2F")
+	case scheme == 5:
+		return getBytesFromHex("2E4F7C2D2E")
+	case scheme == 6:
+		return getBytesFromHex("2E5C5C2E2E")
+	case scheme == 7:
+		return getBytesFromHex("2E237C2D2B")
+	case scheme == 8:
+		return getBytesFromHex("2E4F4F2E2E")
+	case scheme == 9:
+		return getBytesFromHex("2E232E2E2E")
+	default:
+		return getBytesFromHex("2E234F2E2E")
+	}
+}
+
 func getBytesFromHex(value string) []byte {
 	val, _ := hex.DecodeString(value)
 	return val
 }
 
-func generate(id int64) string {
-	idToSymbolScheme := make(map[int64]uint8)
-
+func Generate(id int64) string {
 	rand.Seed(id)
 
 	a := rand.Uint64()
-	idToSymbolScheme[id] = getScheme(a)
 
 	const ONE = int(0x100000000)
 	const SIZE = 64
@@ -82,31 +104,7 @@ func generate(id int64) string {
 
 	x, y, v, value := 0, 0, uint(0), uint(0)
 	mod := uint((a % 11) + 5)
-	var symbols []byte
-
-	if idToSymbolScheme[id] == 0 {
-		return string(symbols[:])
-	} else if idToSymbolScheme[id] == 1 {
-		symbols = getBytesFromHex("2E582F5C2E") // X/\
-	} else if idToSymbolScheme[id] == 2 {
-		symbols = getBytesFromHex("2E2B2D7C2E") // +-|
-	} else if idToSymbolScheme[id] == 3 {
-		symbols = getBytesFromHex("2E2F5C2E2E") // /\
-	} else if idToSymbolScheme[id] == 4 {
-		symbols = getBytesFromHex("2E5C7C2D2F") // \|-/
-	} else if idToSymbolScheme[id] == 5 {
-		symbols = getBytesFromHex("2E4F7C2D2E") // O|-
-	} else if idToSymbolScheme[id] == 6 {
-		symbols = getBytesFromHex("2E5C5C2E2E") // \
-	} else if idToSymbolScheme[id] == 7 {
-		symbols = getBytesFromHex("2E237C2D2B") // #|-+
-	} else if idToSymbolScheme[id] == 8 {
-		symbols = getBytesFromHex("2E4F4F2E2E") // OO
-	} else if idToSymbolScheme[id] == 9 {
-		symbols = getBytesFromHex("2E232E2E2E") // #
-	} else {
-		symbols = getBytesFromHex("2E234F2E2E") // #O
-	}
+	symbols := getSymbols(getScheme(a))
 
 	var c uint
 
