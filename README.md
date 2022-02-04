@@ -6,4 +6,4 @@ A Go-implementation of the [Autoglyph](https://larvalabs.com/autoglyphs) algorit
 
 `go run main.go --out my-pattern --seed 500`
 
-![Pattern produced by seed 1643943138](pattern.png =300x300)
+<img src="https://github.com/emilwidlund/go-autoglyph/blob/master/pattern.png?raw=true" width="300" height="300" />
