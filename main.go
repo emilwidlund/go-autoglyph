@@ -109,6 +109,7 @@ func Generate(seed int64) *string {
 type PatternContext struct {
 	size     int
 	cellSize int
+	padding  int
 	pattern  string
 	draw     *gg.Context
 }
@@ -116,11 +117,13 @@ type PatternContext struct {
 func Draw(pattern string) *PatternContext {
 	size := 64
 	cellSize := 10
-	draw := gg.NewContext(size*cellSize, size*cellSize)
+	padding := 200
+	draw := gg.NewContext(size*cellSize+padding, size*cellSize+padding)
 
 	context := &PatternContext{
 		size,
 		cellSize,
+		padding,
 		pattern,
 		draw,
 	}
@@ -142,8 +145,8 @@ func Draw(pattern string) *PatternContext {
 func DrawGlyph(context *PatternContext, char rune, x int, y int) {
 	c := string(char)
 	halfCellSize := float64(context.cellSize / 2)
-	pointX := float64(x * context.cellSize)
-	pointY := float64(y * context.cellSize)
+	pointX := float64(x*context.cellSize + (context.padding / 2))
+	pointY := float64(y*context.cellSize + (context.padding / 2))
 
 	switch {
 	case c == ".":
