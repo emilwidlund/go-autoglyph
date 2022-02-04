@@ -3,23 +3,27 @@ package main
 import (
 	"encoding/hex"
 	"flag"
+	"github.com/fogleman/gg"
+	_ "image/png"
 	"log"
 	"math"
 	"math/rand"
-	"os"
 	"time"
 )
 
 func main() {
 	seed := flag.Int64("seed", time.Now().Unix(), "Pattern seed")
-	out := flag.String("out", "pattern.txt", "Output path for the pattern")
+	out := flag.String("out", "pattern.png", "Output path for the pattern")
 
 	flag.Parse()
 
 	result := Generate(*seed)
-	writePatternToFile(result, *out)
+	context := Draw(*result)
+
+	context.draw.SavePNG(*out)
 
 	log.Printf("Generated Autoglyph with seed %d to output path: %s", *seed, *out)
+
 }
 
 func getSymbols(a int) []byte {
@@ -52,7 +56,7 @@ func getBytesFromHex(value string) []byte {
 	return val
 }
 
-func Generate(seed int64) string {
+func Generate(seed int64) *string {
 	rand.Seed(seed)
 	a := rand.Int()
 	const ONE = int(0x100000000)
@@ -97,21 +101,78 @@ func Generate(seed int64) string {
 		c++
 	}
 
-	return string(output[:])
+	out := string(output[:])
+
+	return &out
 }
 
-func writePatternToFile(pattern string, path string) {
-	handle, err := os.Create(path)
+type PatternContext struct {
+	size     int
+	cellSize int
+	pattern  string
+	draw     *gg.Context
+}
 
-	if err != nil {
-		log.Fatal(err)
+func Draw(pattern string) *PatternContext {
+	size := 64
+	cellSize := 10
+	draw := gg.NewContext(size*cellSize, size*cellSize)
+
+	context := &PatternContext{
+		size,
+		cellSize,
+		pattern,
+		draw,
 	}
 
-	defer handle.Close()
+	context.draw.SetHexColor("#ffffff")
+	context.draw.Clear()
+	context.draw.SetRGB(0, 0, 0)
 
-	_, err = handle.WriteString(pattern)
+	for i, c := range pattern {
+		x := i % int(size+1)
+		y := math.Floor(float64(i) / float64(size+1))
 
-	if err != nil {
-		log.Fatal(err)
+		DrawGlyph(context, c, x, int(y))
+	}
+
+	return context
+}
+
+func DrawGlyph(context *PatternContext, char rune, x int, y int) {
+	c := string(char)
+	halfCellSize := float64(context.cellSize / 2)
+	pointX := float64(x * context.cellSize)
+	pointY := float64(y * context.cellSize)
+
+	switch {
+	case c == ".":
+		break
+	case c == "O":
+		context.draw.DrawCircle(pointX, pointY, halfCellSize)
+		context.draw.Stroke()
+	case c == "+":
+		context.draw.DrawLine(pointX+halfCellSize, pointY, pointX+halfCellSize, pointY+float64(context.cellSize))
+		context.draw.DrawLine(pointX, pointY+halfCellSize, pointX+float64(context.cellSize), pointY+halfCellSize)
+		context.draw.Stroke()
+	case c == "X":
+		context.draw.DrawLine(pointX, pointY, pointX+float64(context.cellSize), pointY+float64(context.cellSize))
+		context.draw.DrawLine(pointX+float64(context.cellSize), pointY, pointX, pointY+float64(context.cellSize))
+		context.draw.Stroke()
+	case c == "|":
+		context.draw.DrawLine(pointX+halfCellSize, pointY, pointX+halfCellSize, pointY+float64(context.cellSize))
+		context.draw.Stroke()
+	case c == "-":
+		context.draw.DrawLine(pointX, pointY+halfCellSize, pointX+float64(context.cellSize), pointY+halfCellSize)
+		context.draw.Stroke()
+	case c == "\\":
+		context.draw.DrawLine(pointX, pointY, pointX+float64(context.cellSize), pointY+float64(context.cellSize))
+		context.draw.Stroke()
+	case c == "/":
+		context.draw.DrawLine(pointX+float64(context.cellSize), pointY, pointX, pointY+float64(context.cellSize))
+		context.draw.Stroke()
+	case c == "#":
+		context.draw.DrawRectangle(pointX, pointY, float64(context.cellSize), float64(context.cellSize))
+		context.draw.Fill()
 	}
 }

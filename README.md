@@ -4,8 +4,6 @@ A Go-implementation of the [Autoglyph](https://larvalabs.com/autoglyphs) algorit
 
 ## Usage
 
-`go run main.go --out my-pattern.txt --seed 500`
+`go run main.go --out my-pattern --seed 1643941935`
 
-## Todo
-
-- Implement renderer which takes the text-output and turns it into a PNG
+![Pattern with seed 1643941935](pattern.png)
