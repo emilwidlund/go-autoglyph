@@ -6,4 +6,4 @@ A Go-implementation of the [Autoglyph](https://larvalabs.com/autoglyphs) algorit
 
 `go run main.go --out my-pattern.png`
 
-<img src="https://github.com/emilwidlund/go-autoglyph/blob/master/pattern.png?raw=true" width="400" height="400" />
+<img src="https://github.com/emilwidlund/go-autoglyph/blob/master/pattern.png?raw=true" width="400" />
