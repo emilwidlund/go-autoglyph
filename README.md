@@ -4,6 +4,6 @@ A Go-implementation of the [Autoglyph](https://larvalabs.com/autoglyphs) algorit
 
 ## Usage
 
-`go run main.go --out my-pattern --seed 500`
+`go run main.go --out my-pattern --seed 1643943126`
 
-<img src="https://github.com/emilwidlund/go-autoglyph/blob/master/pattern.png?raw=true" width="300" height="300" />
+<img src="https://github.com/emilwidlund/go-autoglyph/blob/master/pattern.png?raw=true" width="400" height="400" />
